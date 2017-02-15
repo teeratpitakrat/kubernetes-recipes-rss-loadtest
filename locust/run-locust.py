@@ -13,8 +13,11 @@ locust_master_port = "31050"
 profile = [(0,5),(5,5),(10,5),(20,5),(50,5),(100,5),(150,5),(200,5),(250,5),(300,5),(350,5),(400,5),]
 
 def change_workload(num_users):
-    payload = {'locust_count': num_users, 'hatch_rate': num_users}
-    r = requests.post("http://" + k8s_node_ip + ":" + locust_master_port + "/swarm", data=payload)
+    if (num_users <= 0):
+        r = requests.get("http://" + k8s_node_ip + ":" + locust_master_port + "/stop")
+    else:
+        payload = {'locust_count': num_users, 'hatch_rate': num_users}
+        r = requests.post("http://" + k8s_node_ip + ":" + locust_master_port + "/swarm", data=payload)
     log_num_users(num_users)
 
 def log_num_users(num_users):
