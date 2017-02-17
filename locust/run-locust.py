@@ -18,21 +18,6 @@ def change_workload(num_users):
     else:
         payload = {'locust_count': num_users, 'hatch_rate': num_users}
         r = requests.post("http://" + k8s_node_ip + ":" + locust_master_port + "/swarm", data=payload)
-    log_num_users(num_users)
-
-def log_num_users(num_users):
-    json_body = [
-            {
-                "measurement": "profile_events",
-                "fields": {
-                    "num_users": num_users
-                    }
-                }
-            ]
-    client.write_points(json_body)
-
-client = InfluxDBClient(k8s_node_ip, 31070, 'root', 'root', 'locust')
-client.create_database('locust')
 
 for p in profile:
     print(time.strftime("%Y-%m-%d %H:%M:%S"), int(time.time()), "Users=", p[0], "Duration=", p[1], "min")
